@@ -1,11 +1,13 @@
-import { pgTable, serial, text, timestamp, varchar, date } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, varchar, date, integer } from "drizzle-orm/pg-core";
 
 export const bookingRequests = pgTable("booking_requests", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   preferredDate: date("preferred_date").notNull(),
-  description: text("description"), // "desc" in user request
-  status: varchar("status", { length: 20 }).default("pending").notNull(), // Internal logic
+  startTime: varchar("start_time", { length: 10 }),
+  endTime: varchar("end_time", { length: 10 }),
+  description: text("description"),
+  status: varchar("status", { length: 20 }).default("pending").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -16,4 +18,5 @@ export const schedules = pgTable("schedules", {
   startTime: varchar("start_time", { length: 10 }),
   endTime: varchar("end_time", { length: 10 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  requestId: integer("req_id").notNull(),
 });

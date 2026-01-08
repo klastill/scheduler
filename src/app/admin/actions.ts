@@ -28,10 +28,11 @@ export async function manageRequest(formData: FormData) {
 
             // 2. Add to schedule
             await db.insert(schedules).values({
+                requestId: requestId,
                 title: `Shot: ${request.name}`,
                 scheduledDate: request.preferredDate,
-                startTime: "2027-01-01 00:00:00",
-                endTime: "2027-01-01 00:00:00",
+                startTime: request.startTime || "00:00",
+                endTime: request.endTime || "00:00",
             });
         }
     } else if (action === "reject") {
@@ -44,4 +45,38 @@ export async function manageRequest(formData: FormData) {
     revalidatePath("/admin/dashboard");
     revalidatePath("/");
     redirect("/admin/dashboard");
+}
+
+export async function deleteScheduleItem(formData: FormData) {
+    const id = parseInt(formData.get("id") as string);
+    if (!id) return;
+
+    await db.delete(schedules).where(eq(schedules.id, id));
+
+    revalidatePath("/admin/dashboard");
+    revalidatePath("/");
+}
+
+export async function deleteRequest(formData: FormData) {
+    const requestId = parseInt(formData.get("requestId") as string);
+    if (!requestId) return;
+
+    await db.delete(schedules).where(eq(schedules.requestId, requestId));
+    await db.delete(bookingRequests).where(eq(bookingRequests.id, requestId));
+
+    revalidatePath("/admin/dashboard");
+}
+
+export async function revertRequest(formData: FormData) {
+    const requestId = parseInt(formData.get("requestId") as string);
+    if (!requestId) return;
+
+    await db.delete(schedules).where(eq(schedules.requestId, requestId));
+
+    await db
+        .update(bookingRequests)
+        .set({ status: "pending" })
+        .where(eq(bookingRequests.id, requestId));
+
+    revalidatePath("/admin/dashboard");
 }

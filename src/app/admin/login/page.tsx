@@ -4,6 +4,7 @@ import { useState } from "react";
 import { adminLogin } from "./actions";
 import { Lock, Loader2 } from "lucide-react";
 
+
 export default function AdminLoginPage() {
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -17,7 +18,11 @@ export default function AdminLoginPage() {
                 setError(result.error);
             }
         } catch (e) {
-            setError("Login failed. Check your password.");
+            if ((e as any).digest?.startsWith('NEXT_REDIRECT')) {
+                throw e; // Re-throw it so Next.js can perform the navigation
+            }
+            console.log(e)
+            // setError("Login failed. Check your password.");
         } finally {
             setIsPending(false);
         }

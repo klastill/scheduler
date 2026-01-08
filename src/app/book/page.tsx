@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { submitBookingRequest } from "./actions";
-import { Calendar, User, MessageSquare, Loader2 } from "lucide-react";
+import { Calendar, User, MessageSquare, Loader2, Clock } from "lucide-react";
 
 export default function BookingPage() {
     const [isPending, setIsPending] = useState(false);
@@ -76,6 +76,41 @@ export default function BookingPage() {
                             required
                             className="w-full bg-transparent border-b border-black/10 py-3 px-0 focus:outline-none focus:border-primary transition-colors"
                         />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-widest font-bold opacity-40 flex items-center gap-2">
+                            <Clock size={14} /> Start (Hour)
+                        </label>
+                        <select
+                            name="startTime"
+                            className="w-full bg-transparent border-b border-black/10 py-3 px-0 focus:outline-none transition-colors appearance-none cursor-pointer form-select"
+                        >
+                            <option value="" className="text-black">Select Hour</option>
+                            {Array.from({ length: 24 }).map((_, i) => (
+                                <option key={i} value={i} className="text-black">
+                                    {i < 10 ? `0${i}` : i}:00
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-widest font-bold opacity-40 flex items-center gap-2">
+                            <Clock size={14} /> End (Hour)
+                        </label>
+                        <select
+                            name="endTime"
+                            className="w-full bg-transparent border-b border-black/10 py-3 px-0 focus:outline-none transition-colors appearance-none cursor-pointer form-select"
+                        >
+                            <option value="" className="text-black">Select Hour</option>
+                            {Array.from({ length: 24 }).map((_, i) => (
+                                <option key={i} value={i} className="text-black">
+                                    {i < 10 ? `0${i}` : i}:00
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 </div>
 
